@@ -1,15 +1,17 @@
-using LumiHome.API.Data;
-using LumiHome.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PasTech.SmartHome.API.Data;
+using PasTech.SmartHome.API.Hubs;
+using PasTech.SmartHome.API.Models;
+using PasTech.SmartHome.API.Services;
 
-namespace LumiHome.API.Controllers;
+namespace PasTech.SmartHome.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class DevicesController(AppDbContext db) : ControllerBase
+public class DevicesController(AppDbContext db, ISmartHomeNotifier notifier, MqttService mqtt) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int? roomId, [FromQuery] string? type)
@@ -65,6 +67,12 @@ public class DevicesController(AppDbContext db) : ControllerBase
         });
 
         await db.SaveChangesAsync();
+
+        // Notify via SignalR + MQTT
+        await notifier.DeviceStateChanged(id, new { state.IsOn, state.Brightness, state.IsLocked, state.SetTemperature, state.AcMode });
+        if (device.MqttTopic != null)
+            await mqtt.PublishCommand($"{device.MqttTopic}/command", req);
+
         return Ok(ToDto(device));
     }
 

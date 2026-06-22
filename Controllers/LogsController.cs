@@ -1,10 +1,10 @@
-using LumiHome.API.Data;
-using LumiHome.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PasTech.SmartHome.API.Data;
+using PasTech.SmartHome.API.Models;
 
-namespace LumiHome.API.Controllers;
+namespace PasTech.SmartHome.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

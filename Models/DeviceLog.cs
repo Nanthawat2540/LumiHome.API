@@ -1,4 +1,4 @@
-namespace LumiHome.API.Models;
+namespace PasTech.SmartHome.API.Models;
 
 public class DeviceLog
 {
@@ -8,5 +8,7 @@ public class DeviceLog
     public required string Action { get; set; }
     public string? Detail { get; set; }
     public int? UserId { get; set; }
+    public User? User { get; set; }
+    public string? Source { get; set; } // app, automation, mqtt, schedule
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
