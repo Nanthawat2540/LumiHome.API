@@ -1,0 +1,14 @@
+services:
+  lumihome-api:
+    build: .
+    container_name: lumihome-api
+    restart: unless-stopped
+    ports:
+      - "5050:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=PasSmartHomeDB;User Id=sa;Password=@Ps03032022;TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - Mqtt__Host=host.docker.internal
+      - Mqtt__Port=1883
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
